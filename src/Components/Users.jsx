@@ -4,7 +4,7 @@ import Card from "./Card";
 
 export default function Users() {
   const [profiles, setProfiles] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [inp, setInp] = useState("");
 
@@ -20,13 +20,16 @@ export default function Users() {
     await getUsers()
       .then((res) => {
         let arr = res.data.items;
+        setIsLoading(false);
         return arr;
       })
+
       .then((res) => setProfiles(res))
-      .catch((err) => alert(err));
+      .catch((err) => alert(err))
+      .finally();
   };
   const getUsers = () => {
-    // setIsLoading(true);
+    setIsLoading(true);
     return axios({
       method: "get",
       //https://api.github.com/search/users?q=pawan
@@ -41,8 +44,9 @@ export default function Users() {
       <br />
       <br />
       <button onClick={handleSearch}>Search</button>
-      {
-        // isLoading === true ? <h2>...loading</h2>:(
+      {isLoading === true ? (
+        <h1>...loading</h1>
+      ) : (
         profiles.map((item) => {
           return (
             <Card
@@ -53,7 +57,7 @@ export default function Users() {
             />
           );
         })
-      }
+      )}
     </div>
   );
 }
